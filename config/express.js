@@ -8,7 +8,6 @@ var session = require('express-session');
 var compression = require('compression');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
-var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var csrf = require('csurf');
@@ -82,12 +81,16 @@ module.exports = function (app, passport) {
 
   // cookieParser should be above session
   app.use(cookieParser());
-  app.use(cookieSession({ secret: 'secret' }));
+
   app.use(session({
     secret: pkg.name,
     proxy: true,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: new Date(Date.now() + 3600000),
+      maxAge: 3600000
+    },
     store: new mongoStore({
       url: config.db,
       collection : 'sessions'
