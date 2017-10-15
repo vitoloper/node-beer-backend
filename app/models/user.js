@@ -13,7 +13,7 @@ var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
   name: { type: String, default: '' },
-  email: { type: String, default: '' },
+  email: { type: String, default: '', unique: true},
   password: { type: String, default: '' },
   salt: { type: String, default: '' },
   role: {type: 'String', enum: ['user', 'admin'], default: 'user'}
