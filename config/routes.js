@@ -60,6 +60,15 @@ module.exports = function (app, passport) {
     return res.status(200).json({message: 'Logout successful'});
   });
 
+  // Get logged user data
+  app.get('/api/user', function (req, res) {
+    if (req.user) {
+      return res.status(200).json(req.user);
+    } else {
+      return res.status(401).json({message: 'Not logged in'});
+    }
+  });
+
   // User authorization middleware
   function isUser(req, res, next) {
     // req.user is the session stored on the database
