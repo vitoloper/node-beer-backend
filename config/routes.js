@@ -14,6 +14,53 @@ module.exports = function (app, passport) {
 
   app.get('/', home.index);
 
+  // Signup
+  app.post('/api/local-signup', function(req, res, next) {
+   passport.authenticate('local-signup', function(err, user, info) {
+     // console.log(req.body);
+     // console.log('err: ', err);
+     // console.log('user: ', user);
+     // console.log('info: ', info);
+
+     if (err) { return next(err); }
+     if (!user) { return res.status(401).json(info); }
+
+     // Login after user creation
+     req.logIn(user, function(err) {
+       if (err)
+         return next(err);
+
+       return res.status(200).json(user);
+     });
+   })(req, res, next);
+  });
+
+  // Login
+  app.post('/api/local-login', function(req, res, next) {
+   passport.authenticate('local-login', function(err, user, info) {
+     // console.log(req.body);
+     // console.log('err: ', err);
+     // console.log('user: ', user);
+     // console.log('info: ', info);
+
+     if (err) { return next(err); }
+     if (!user) { return res.status(401).json(info); }
+     req.logIn(user, function(err) {
+       if (err)
+         return next(err);
+
+       return res.status(200).json(user);
+     });
+   })(req, res, next);
+  });
+
+  // Logout
+ app.get('/api/local-logout', function (req, res) {
+   req.logout();
+   return res.status(200).json({message: 'Logout successful'});
+ });
+
+
   /**
    * Error handling
    */
