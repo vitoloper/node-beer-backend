@@ -5,6 +5,7 @@
  */
 
 const home = require('../app/controllers/home');
+const beerController = require('../app/controllers/beer');
 
 /**
  * Expose
@@ -13,6 +14,11 @@ const home = require('../app/controllers/home');
 module.exports = function (app, passport) {
 
   app.get('/', home.index);
+
+  // Beer routes
+  app.get('/api/beers', isUser, beerController.get);
+  app.get('/api/beers/:id', isUser, beerController.get);
+  app.post('/api/beers', isUser, beerController.save);
 
   // Signup
   app.post('/api/local-signup', function(req, res, next) {
