@@ -55,10 +55,30 @@ module.exports = function (app, passport) {
   });
 
   // Logout
- app.get('/api/local-logout', function (req, res) {
-   req.logout();
-   return res.status(200).json({message: 'Logout successful'});
- });
+  app.get('/api/local-logout', function (req, res) {
+    req.logout();
+    return res.status(200).json({message: 'Logout successful'});
+  });
+
+  // User authorization middleware
+  function isUser(req, res, next) {
+    // req.user is the session stored on the database
+    if (req.isAuthenticated() && (req.user.role === 'admin' || req.user.role === 'user')) {
+      return next();
+    }
+
+    return res.status(401).json({message: 'Unauthorized'});
+  }
+
+  // Admin authorization middleware
+  function isAdmin(req, res, next) {
+    // req.user is the session stored on the database
+    if (req.isAuthenticated() && req.user.role === 'admin' ) {
+      return next();
+    }
+
+    return res.status(401).json({message: 'Unauthorized'});
+  }
 
 
   /**
