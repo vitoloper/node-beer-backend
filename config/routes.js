@@ -19,6 +19,8 @@ module.exports = function (app, passport) {
   app.get('/api/beers', isUser, beerController.get);
   app.get('/api/beers/:id', isUser, beerController.get);
   app.post('/api/beers', isUser, beerController.save);
+  app.put('/api/beers/:id', isUser, beerController.update);
+  app.delete('/api/beers/:id', isUser, beerController.delete);
 
   // Signup
   app.post('/api/local-signup', function(req, res, next) {

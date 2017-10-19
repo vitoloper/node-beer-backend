@@ -66,4 +66,46 @@ exports.get = function (req, res, next) {
       return res.status(200).json(beer);
     });
   }
+};
+
+exports.update = function (req, res) {
+  var id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({message: 'Missing "id" parameter in URI'});
+  }
+
+  // NOTE:
+  // All top level update keys which are not atomic operation names are treated as set operations:
+  // Example:
+  // Model.findByIdAndUpdate(id, { name: 'jason bourne' }, options, callback)
+  // is sent as
+  // Model.findByIdAndUpdate(id, { $set: { name: 'jason bourne' }}, options, callback)
+  // This helps prevent accidentally overwriting your document with { name: 'jason bourne' }.
+
+  Beer.findByIdAndUpdate(id, req.body, {new: true}, function (err, beer) {
+    if (err) {
+      console.log(err.stack);
+      return res.status(500).json({message: 'Beer update error'});
+    }
+
+    return res.status(200).json(beer);
+  });
+};
+
+exports.delete = function (req, res) {
+  var id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({message: 'Missing "id" parameter in URI'});
+  }
+
+  Beer.remove({_id: id}, function(err, writeOpResult) {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({message: 'Beer remove error'});
+    }
+
+    return res.status(200).json(writeOpResult);
+  });
 }
