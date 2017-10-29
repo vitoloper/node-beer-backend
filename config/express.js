@@ -12,7 +12,9 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var csrf = require('csurf');
 
-var mongoStore = require('connect-mongo')(session);
+// var mongoStore = require('connect-mongo')(session);
+var redisStore = require('connect-redis')(session);
+
 var flash = require('connect-flash');
 var winston = require('winston');
 var helpers = require('view-helpers');
@@ -26,7 +28,7 @@ var env = process.env.NODE_ENV || 'development';
  * Expose
  */
 
-module.exports = function (app, passport) {
+module.exports = function (app, passport, redisClient) {
 
   // Compression middleware (should be placed before express.static)
   app.use(compression({
@@ -91,10 +93,12 @@ module.exports = function (app, passport) {
       expires: new Date(Date.now() + 3600000),
       maxAge: 3600000
     },
-    store: new mongoStore({
+    /* store: new mongoStore({
       url: config.db,
       collection : 'sessions'
-    })
+    }) */
+    // NOTE: ttl is in seconds. Session will expire after ttl seconds.
+    store: new redisStore({ host: 'localhost', port: 6379, client: redisClient, ttl: 3600})
   }));
 
   // use passport session

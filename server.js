@@ -26,6 +26,19 @@ const port = process.env.PORT || 3000;
 const app = express();  // Express
 const connection = connect(); // MongoDB connection
 
+// *** Redis client connection ***
+var redis = require('redis');
+var redisClient;
+redisClient = redis.createClient({host: config.redis.host, port: config.redis.port});
+
+redisClient.on('ready', function () {
+  console.log('Redis client ready');
+});
+redisClient.on('error', function (err) {
+    console.log('redisClient Error: ', err);
+});
+// *** Redis client connection ***
+
 /**
  * Expose
  */
@@ -42,7 +55,7 @@ fs.readdirSync(models)
 
 // Bootstrap routes
 require('./config/passport')(passport);
-require('./config/express')(app, passport);
+require('./config/express')(app, passport, redisClient);
 require('./config/routes')(app, passport);
 
 connection
@@ -57,7 +70,6 @@ function listen () {
 }
 
 function connect () {
-  
   // Mongoose 4.11.x
   var options = {keepAlive: 5000, useMongoClient: true};
   var connection = mongoose.connect(config.db, options);

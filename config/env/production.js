@@ -5,6 +5,10 @@
 
 module.exports = {
   db: 'mongodb://localhost/beer_prod',
+  redis: {
+    host: 'localhost',
+    port: 6379
+  },
   facebook: {
     clientID: 'APP_ID',
     clientSecret: 'SECRET',
