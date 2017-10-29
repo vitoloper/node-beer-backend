@@ -32,8 +32,11 @@ var redisClient;
 redisClient = redis.createClient({host: config.redis.host, port: config.redis.port});
 
 redisClient.on('ready', function () {
-  console.log('Redis client ready');
+  if (app.get('env') !== 'test') {
+    console.log('Redis client ready');
+  }
 });
+
 redisClient.on('error', function (err) {
     console.log('redisClient Error: ', err);
 });
@@ -45,7 +48,8 @@ redisClient.on('error', function (err) {
 
 module.exports = {
   app,
-  connection
+  connection,
+  redisClient
 };
 
 // Bootstrap models
