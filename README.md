@@ -3,6 +3,10 @@
 A demo Node.js REST API backend using Express, Mongoose, Passport and Redis session storage.
 Based on [node-express-mongoose](https://github.com/madhums/node-express-mongoose) boilerplate by madhums.
 
+## Prerequisites
+
+Before starting the project, make sure both MongoDB and Redis are up and running.
+
 ## Installation
 
 Clone the repository and install the required modules:
